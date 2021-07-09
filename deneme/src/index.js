@@ -5,6 +5,6 @@ export const ExampleComponent = ({ text }) => {
   return <div className={styles.test}>Example Component: {text}</div>
 }
 
-export const ExampleButton = ({ onClick }) => {
-  return <div onClick={onClick}>Example Component:</div>
+export const ExampleButton = ({ children,onClick }) => {
+  return <div onClick={onClick}>Example Component:{children}</div>
 }

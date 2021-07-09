@@ -17,7 +17,7 @@ const SIZES = [
     "btn--large"
 ]
 
-export const Button = ({ children, type, onClick, buttonStyle, buttonSize }) => {
+export const ExampleButton = ({ children, type, onClick, buttonStyle, buttonSize}) => {
 
     const checkButtonStyle = STYLES.includes(buttonStyle) ? buttonStyle : STYLES[0]
     const checkButtonSize = SIZES.includes(buttonSize) ? buttonSize : SIZES[0]
