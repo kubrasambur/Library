@@ -41,17 +41,20 @@ export default function HomePage() {
     AsyncStorage.getItem("books").then((value) => {
       console.log("value1", value);
       setFilteredData(JSON.parse(value));
+      setMasterDataSource(JSON.parse(value));
     });
   }
   useEffect(() => {
     AsyncStorage.getItem("books").then((value) => {
       console.log("value2", value);
       setFilteredData(JSON.parse(value));
+      setMasterDataSource(JSON.parse(value));
     });
   }, []);
 
   function handleFilter(text) {
     if (text) {
+      console.log("masterDataSource",masterDataSource)
       const newData = masterDataSource.filter(function (item) {
         const itemData = item.title
           ? item.title.toUpperCase()
