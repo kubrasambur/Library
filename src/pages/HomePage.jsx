@@ -1,11 +1,15 @@
 import React, { useEffect, useState } from "react";
 import { Text, HStack, ScrollView, VStack, Button, Center } from "native-base";
 import SearchBar from "../components/SearchBar";
-import CustomAddBookModal from "../components/custom/CustomAddBookModal";
+import CustomAddModal from "../components/custom/CustomAddModal";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import CustomEditModal from './../components/custom/CustomEditModal';
 
 export default function HomePage() {
   const [open, setOpen] = useState(false);
+  const [editedTitle, setEditedTitle] = useState("");
+  const [bookId,setBookId]=useState("")
+  const [EditIsOpen, setEditIsOpen] = useState(false)
   const [value, setValue] = useState("");
   const [filteredData, setFilteredData] = useState([]);
   const [search, setSearch] = useState("");
@@ -39,14 +43,12 @@ export default function HomePage() {
       ])
     );
     AsyncStorage.getItem("books").then((value) => {
-      console.log("value1", value);
       setFilteredData(JSON.parse(value));
       setMasterDataSource(JSON.parse(value));
     });
   }
   useEffect(() => {
     AsyncStorage.getItem("books").then((value) => {
-      console.log("value2", value);
       setFilteredData(JSON.parse(value));
       setMasterDataSource(JSON.parse(value));
     });
@@ -54,7 +56,6 @@ export default function HomePage() {
 
   function handleFilter(text) {
     if (text) {
-      console.log("masterDataSource",masterDataSource)
       const newData = masterDataSource.filter(function (item) {
         const itemData = item.title
           ? item.title.toUpperCase()
@@ -70,16 +71,31 @@ export default function HomePage() {
     }
   }
 
-  function handleEdit() {
-    console.log("edit");
-  }
-
   function handleDelete(id) {
     AsyncStorage.getItem("books").then((books) => {
       const alteredBooks = JSON.parse(books).filter((book) => book.id !== id);
       AsyncStorage.setItem("books", JSON.stringify(alteredBooks));
       setFilteredData(alteredBooks);
     });
+  }
+  function handleEdit(book) {
+    setEditIsOpen(true)
+    setBookId(book.id)
+    setEditedTitle(book.title)
+  }
+
+  function editBook (){
+    AsyncStorage.getItem("books").then((books) => {
+      const alteredBooks = JSON.parse(books).map((book) => {
+        if (book.id === bookId) {
+          book.title = editedTitle;
+        }
+        return book;
+      });
+      AsyncStorage.setItem("books", JSON.stringify(alteredBooks));
+      setFilteredData(alteredBooks);
+    });
+    setEditIsOpen(false)
   }
 
   return (
@@ -110,7 +126,7 @@ export default function HomePage() {
               display="flex"
               justifyContent="center"
             >
-              <Button onPress={handleEdit}>Edit</Button>
+              <Button onPress={()=>handleEdit(book)}>Edit</Button>
               <Button ml={3} onPress={() => handleDelete(book.id)}>
                 delete
               </Button>
@@ -122,13 +138,22 @@ export default function HomePage() {
         Add new book
       </Button>
 
-      <CustomAddBookModal
+      <CustomAddModal
         isOpen={open}
         setOpen={() => setOpen(false)}
         value={value}
         onChangeText={setValue}
         handleOnPress={() => handleAddBook()}
         title="Add Book"
+      />
+
+      <CustomEditModal
+        isOpen={EditIsOpen}
+        setOpen={() => setEditIsOpen(false)}
+        value={editedTitle}
+        onChangeText={setEditedTitle}
+        handleOnPress={() => editBook()}
+        title="Edit book"
       />
     </VStack>
   );

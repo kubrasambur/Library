@@ -1,7 +1,7 @@
 import React from "react";
 import { Button, Modal, FormControl, Input } from "native-base";
 
-export default function CustomAddBookModal({
+export default function CustomAddModal({
   isOpen,
   setOpen,
   value,
