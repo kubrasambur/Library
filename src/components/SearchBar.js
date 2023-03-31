@@ -4,7 +4,7 @@ import { Ionicons } from "@expo/vector-icons";
 
 export default function SearchBar({ onChangeText, value }) {
   return (
-    <VStack w="85%" space={5} alignSelf="center">
+    <VStack w="90%" space={5} pt={3} alignSelf="center">
       <Input
         placeholder="Search"
         variant="filled"
