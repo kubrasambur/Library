@@ -1,5 +1,5 @@
 import React from "react";
-import { VStack, Input, Icon, Box, Divider, Heading } from "native-base";
+import { VStack, Input, Icon } from "native-base";
 import { Ionicons } from "@expo/vector-icons";
 
 export default function SearchBar({ onChangeText, value }) {
@@ -10,6 +10,8 @@ export default function SearchBar({ onChangeText, value }) {
         variant="filled"
         width="100%"
         borderRadius="10"
+        borderColor="gray.300"
+        borderWidth="4"
         py="1"
         px="2"
         InputLeftElement={
