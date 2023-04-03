@@ -20,8 +20,12 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 export default function HomePage({ navigation }) {
   const filteredBooks = useSelector((state) => state?.book?.filteredBooks);
   const books = useSelector((state) => state?.book?.books);
+  const users = useSelector((state) => state?.book?.users);
+  const email = useSelector((state) => state?.book?.email);
 
   const [search, setSearch] = useState("");
+  const [user, setUser] = useState({});
+
 
   function handleFilter(text) {
     if (text) {
@@ -46,12 +50,17 @@ export default function HomePage({ navigation }) {
       store.dispatch(setBooks(JSON.parse(value)));
     });
   }, []);
+  
+  useEffect(() => {
+    const u1 = users?.find((u) => u.email === email);
+    setUser(u1);
+  }, [email]);
 
   return (
     <VStack display="flex" flex={1} alignItems="center">
       <SearchBar onChangeText={(text) => handleFilter(text)} value={search} />
       <ScrollView w="90%" my={3}>
-        {filteredBooks?.map((book) => (
+        {user?.books?.map((book) => (
           <Box
             rounded="lg"
             overflow="hidden"

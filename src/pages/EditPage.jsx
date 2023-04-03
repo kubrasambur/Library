@@ -51,9 +51,11 @@ const EditPage = () => {
   const [editedPages, setEditedPages] = useState("");
   const [editedCategory, setEditedCategory] = useState("");
   const [user1, setUser1] = useState({});
+  const [render, setRender] = useState([]);
 
-  // const [render, setRender] = useState(filteredBooks);
-  const render = user1?.books;
+  useEffect(() => {
+   setRender(user1.books);
+  }, [ user1.books]);
 
   function handleAddBook() {
     const newBook = {
@@ -83,6 +85,7 @@ const EditPage = () => {
     });
     AsyncStorage.setItem("users", JSON.stringify(alteredUsers));
     store.dispatch(setUsers(alteredUsers));
+    setRender(user1.books);
 
     setValue("");
     setOpen(false);
@@ -94,6 +97,15 @@ const EditPage = () => {
       AsyncStorage.setItem("books", JSON.stringify(alteredBooks));
       store.dispatch(setFilteredBooks(alteredBooks));
     });
+
+    const alteredUsers = users.map((user) => {
+      if (user.id === user1.id) {
+        user.books = user.books.filter((book) => book.id !== id);
+      }
+      return user;
+    });
+    AsyncStorage.setItem("users", JSON.stringify(alteredUsers));
+    store.dispatch(setUsers(alteredUsers));
   }
 
   function handleEdit(book) {
@@ -123,6 +135,28 @@ const EditPage = () => {
       AsyncStorage.setItem("books", JSON.stringify(alteredBooks));
       store.dispatch(setFilteredBooks(alteredBooks));
     });
+    AsyncStorage.getItem("users").then((users) => {
+      const alteredUsers = JSON.parse(users).map((user) => {
+        if (user.id === user1.id) {
+          user.books = user.books.map((book) => {
+            if (book.id === bookId) {
+              book.title = editedTitle;
+              book.author = editedAuthor;
+              book.publisher = editedPublisher;
+              book.publishYear = editedPublishYear;
+              book.pages = editedPages;
+              book.category = editedCategory;
+            }
+            return book;
+          });
+        }
+        return user;
+      });
+      AsyncStorage.setItem("users", JSON.stringify(alteredUsers));
+      store.dispatch(setUsers(alteredUsers));
+      setRender(alteredUsers.find((u) => u.email === email)?.books);
+    });
+
     setEditIsOpen(false);
   }
 
