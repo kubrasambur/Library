@@ -32,10 +32,8 @@ const EditPage = () => {
   const filteredBooks = useSelector((state) => state?.book?.filteredBooks);
 
   const users = useSelector((state) => state?.book?.users);
-  console.log("users", users);
 
   const email = useSelector((state) => state?.book?.email);
-  console.log("email", email);
 
   const [open, setOpen] = useState(false);
   const [editedTitle, setEditedTitle] = useState("");
@@ -67,13 +65,16 @@ const EditPage = () => {
       pages: pages,
       category: category,
     };
-    AsyncStorage.setItem("books", JSON.stringify([...books, newBook]));
+    if (books) {
+      AsyncStorage.setItem("books", JSON.stringify([...books, newBook]));
+    } else {
+      AsyncStorage.setItem("books", JSON.stringify([newBook]));
+    }
     AsyncStorage.getItem("books").then((value) => {
       store.dispatch(setFilteredBooks(JSON.parse(value)));
       store.dispatch(setBooks(JSON.parse(value)));
     });
     store.dispatch(addBook(newBook));
-
     const alteredUsers = users.map((user) => {
       if (user.id === user1.id) {
         user.books = [...user.books, newBook];
@@ -134,9 +135,7 @@ const EditPage = () => {
 
   useEffect(() => {
     const u1 = users?.find((u) => u.email === email);
-    console.log("u1", u1);
     setUser1(u1);
-    console.log("user1", user1);
   }, [email]);
 
   return (

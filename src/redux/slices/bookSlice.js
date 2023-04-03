@@ -23,11 +23,9 @@ export const bookSlice = createSlice({
       state.filteredBooks = action.payload;
     },
     addUser: (state, action) => {
-      console.log("action.payload1", action.payload)
       state.users.push(action.payload);
     },
     setUsers: (state, action) => {
-      console.log("action.payload", action.payload)
       state.users = action.payload;
     },
     setEmaill: (state, action) => {

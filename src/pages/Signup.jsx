@@ -18,7 +18,6 @@ import { useSelector } from "react-redux";
 
 const Signup = ({ navigation }) => {
   const users = useSelector((state) => state?.book?.users);
-  console.log("users", users)
 
   const [show, setShow] = useState(false);
   const [showConfirm, setShowConfirm] = useState(false);
