@@ -17,7 +17,12 @@ import CustomAddModal from "../components/custom/CustomAddModal";
 import CustomEditModal from "./../components/custom/CustomEditModal";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { store } from "../redux/store";
-import { addBook, setBooks, setFilteredBooks } from "../redux/slices/bookSlice";
+import {
+  addBook,
+  setBooks,
+  setFilteredBooks,
+  setUsers,
+} from "../redux/slices/bookSlice";
 import uuid from "react-native-uuid";
 import { useSelector } from "react-redux";
 import { Entypo, AntDesign } from "@expo/vector-icons";
@@ -25,6 +30,12 @@ import { Entypo, AntDesign } from "@expo/vector-icons";
 const EditPage = () => {
   const books = useSelector((state) => state?.book?.books);
   const filteredBooks = useSelector((state) => state?.book?.filteredBooks);
+
+  const users = useSelector((state) => state?.book?.users);
+  console.log("users", users);
+
+  const email = useSelector((state) => state?.book?.email);
+  console.log("email", email);
 
   const [open, setOpen] = useState(false);
   const [editedTitle, setEditedTitle] = useState("");
@@ -41,38 +52,37 @@ const EditPage = () => {
   const [editedPublishYear, setEditedPublishYear] = useState("");
   const [editedPages, setEditedPages] = useState("");
   const [editedCategory, setEditedCategory] = useState("");
+  const [user1, setUser1] = useState({});
+
+  // const [render, setRender] = useState(filteredBooks);
+  const render = user1?.books;
 
   function handleAddBook() {
-    AsyncStorage.setItem(
-      "books",
-      JSON.stringify([
-        ...books,
-        {
-          id: uuid.v4(),
-          title: value,
-          author: author,
-          publisher: publisher,
-          publishYear: publishYear,
-          pages: pages,
-          category: category,
-        },
-      ])
-    );
+    const newBook = {
+      id: uuid.v4(),
+      title: value,
+      author: author,
+      publisher: publisher,
+      publishYear: publishYear,
+      pages: pages,
+      category: category,
+    };
+    AsyncStorage.setItem("books", JSON.stringify([...books, newBook]));
     AsyncStorage.getItem("books").then((value) => {
       store.dispatch(setFilteredBooks(JSON.parse(value)));
       store.dispatch(setBooks(JSON.parse(value)));
     });
-    store.dispatch(
-      addBook({
-        id: uuid.v4(),
-        title: value,
-        author: author,
-        publisher: publisher,
-        publishYear: publishYear,
-        pages: pages,
-        category: category,
-      })
-    );
+    store.dispatch(addBook(newBook));
+
+    const alteredUsers = users.map((user) => {
+      if (user.id === user1.id) {
+        user.books = [...user.books, newBook];
+      }
+      return user;
+    });
+    AsyncStorage.setItem("users", JSON.stringify(alteredUsers));
+    store.dispatch(setUsers(alteredUsers));
+
     setValue("");
     setOpen(false);
   }
@@ -122,10 +132,17 @@ const EditPage = () => {
     });
   }, []);
 
+  useEffect(() => {
+    const u1 = users?.find((u) => u.email === email);
+    console.log("u1", u1);
+    setUser1(u1);
+    console.log("user1", user1);
+  }, [email]);
+
   return (
     <VStack pt={6} display="flex" flex={1} alignItems="center">
       <ScrollView w="90%">
-        {filteredBooks.map((book) => (
+        {render?.map((book) => (
           <Box
             rounded="lg"
             overflow="hidden"
