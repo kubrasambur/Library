@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Box,
   Text,
@@ -9,18 +9,57 @@ import {
   Link,
   Button,
   HStack,
-  Center,
   Pressable,
   Icon,
 } from "native-base";
 import { MaterialIcons } from "@expo/vector-icons";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useSelector } from "react-redux";
+import { store } from "../redux/store";
+import { setEmaill, setUsers } from "../redux/slices/bookSlice";
 
 const Login = ({ navigation }) => {
+  const users = useSelector((state) => state?.book?.users);
+
   const [show, setShow] = useState(false);
   const [password, setPassword] = useState("");
   const [email, setEmail] = useState("");
 
-  function handleLogin() {}
+  useEffect(() => {
+    if(users){
+     AsyncStorage.getItem("users").then((users) => {
+       store.dispatch(setUsers(JSON.parse(users)));
+     }
+     );
+    }else{
+     AsyncStorage.setItem("users", JSON.stringify([])).then(() => {
+       AsyncStorage.getItem("users").then((users) => {
+         store.dispatch(setUsers(JSON.parse(users)));
+       }
+       );
+     });
+    }
+   }, []);
+
+  function handleLogin() {
+    if (email === "" || password === "") {
+      alert("Please enter email and password");
+      return;
+    } else {
+      store.dispatch(setEmaill(email));
+
+      const user = users?.find(
+        (u) => u.email === email && u.password === password
+      );
+      if (user) {
+        AsyncStorage.setItem("user", JSON.stringify(user)).then(() => {
+          navigation.navigate("Library");
+        });
+      } else {
+        alert("User not found");
+      }
+    }
+  }
 
   return (
     <VStack flex={1} w="100%" bg="white" alignItems="center" mt={-10}>

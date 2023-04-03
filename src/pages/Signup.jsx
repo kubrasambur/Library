@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Box,
   Heading,
@@ -12,27 +12,69 @@ import {
 import { MaterialIcons } from "@expo/vector-icons";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import uuid from "react-native-uuid";
+import { store } from "../redux/store";
+import { addUser, setUsers } from "../redux/slices/bookSlice";
+import { useSelector } from "react-redux";
 
-const Signup = () => {
+const Signup = ({ navigation }) => {
+  const users = useSelector((state) => state?.book?.users);
+
   const [show, setShow] = useState(false);
   const [showConfirm, setShowConfirm] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
 
-  const key = uuid.v4();
+  useEffect(() => {
+   if(users){
+    AsyncStorage.getItem("users").then((users) => {
+      store.dispatch(setUsers(JSON.parse(users)));
+    }
+    );
+   }else{
+    AsyncStorage.setItem("users", JSON.stringify([])).then(() => {
+      AsyncStorage.getItem("users").then((users) => {
+        store.dispatch(setUsers(JSON.parse(users)));
+      }
+      );
+    });
+   }
+  }, []);
 
   function handleSignup() {
     if (password !== confirmPassword) {
       alert("Passwords don't match");
       return;
     } else {
-      //   AsyncStorage.setItem(
-      //     JSON.stringify(key),
-      //     JSON.stringify({ email, password })
-      //   );
+     const user = {
+        id: uuid.v4(),
+        email,
+        password,
+        books:[]
+      };
+      const userExists = users?.find((u) => u.email === email);
+      if (userExists) {
+        alert("User already exists");
+        return;
+      }else{
+        
+        AsyncStorage.setItem("users", JSON.stringify([...users,user])).then(() => {
+          alert("User created successfully");
+          navigation.navigate("Login");
+        });
+
+        AsyncStorage.getItem("users").then((users) => {
+          store.dispatch(setUsers(JSON.parse(users)));
+        }
+        );
+        store.dispatch(addUser(user));
+
+      }
+
     }
-  }
+    }
+
+
 
   return (
     <VStack flex={1} w="100%" bg="white" h="100%" alignItems="center" mt={-10}>

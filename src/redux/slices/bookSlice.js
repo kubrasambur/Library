@@ -3,6 +3,8 @@ import { createSlice } from "@reduxjs/toolkit";
 const initialState = {
   books: [],
   filteredBooks: [],
+  users: [],
+  email: null,
   status: "idle",
   error: null,
 };
@@ -20,9 +22,18 @@ export const bookSlice = createSlice({
     setFilteredBooks: (state, action) => {
       state.filteredBooks = action.payload;
     },
+    addUser: (state, action) => {
+      state.users.push(action.payload);
+    },
+    setUsers: (state, action) => {
+      state.users = action.payload;
+    },
+    setEmaill: (state, action) => {
+      state.email = action.payload;
+    },
   },
 });
 
-export const { addBook, setBooks, setFilteredBooks } = bookSlice.actions;
+export const { addBook, setBooks, setFilteredBooks,addUser,setUsers,setEmaill } = bookSlice.actions;
 
 export default bookSlice.reducer;
