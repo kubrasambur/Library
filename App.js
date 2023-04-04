@@ -10,6 +10,7 @@ import Signup from "./src/pages/Signup";
 import BooksToRead from "./src/pages/BooksToRead";
 import BooksReadInThePast from "./src/pages/BooksReadInThePast";
 import LentBooks from "./src/pages/LentBooks";
+import Categories from "./src/pages/Categories";
 
 const Stack = createNativeStackNavigator();
 
@@ -29,6 +30,7 @@ export default function App() {
             <Stack.Screen name="BooksToRead" component={BooksToRead} />
             <Stack.Screen name="BooksReadInPast" component={BooksReadInThePast} />
             <Stack.Screen name="LentBooks" component={LentBooks} />
+            <Stack.Screen name="Categories" component={Categories} />
           </Stack.Navigator>
         </NavigationContainer>
       </NativeBaseProvider>

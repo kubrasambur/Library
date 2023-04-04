@@ -27,7 +27,7 @@ import uuid from "react-native-uuid";
 import { useSelector } from "react-redux";
 import { Entypo, AntDesign } from "@expo/vector-icons";
 
-const EditPage = () => {
+const EditPage = ({navigation}) => {
   const users = useSelector((state) => state?.book?.users);
   const email = useSelector((state) => state?.book?.email);
 
@@ -73,6 +73,11 @@ const EditPage = () => {
     setRender(user1.books);
 
     setValue("");
+    setAuthor("");
+    setPublisher("");
+    setPublishYear("");
+    setPages("");
+    setCategory("");
     setOpen(false);
   }
 
@@ -228,8 +233,17 @@ const EditPage = () => {
       <Button
         alignSelf="center"
         w="90%"
-        mb={6}
+        mb={2}
         mt={4}
+        onPress={() => navigation.navigate("Categories")}
+      >
+        Categories
+      </Button>
+      <Button
+        alignSelf="center"
+        w="90%"
+        mb={6}
+        
         onPress={() => setOpen(true)}
       >
         Add new book

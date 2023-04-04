@@ -45,18 +45,22 @@ export default function HomePage({ navigation }) {
   }
   function handleMarkAsRead(book) {
     return () => {
-      if (book.toRead === true) {
-        alert("You marked this book to read list");
+      if(book.isLend === true){
+        alert("You have already lent this book");
         return;
-      }
-      book.isRead = true;
-      const u2 = users?.filter((u) => u.email !== email);
-      u2.push(u1);
-      AsyncStorage.setItem("users", JSON.stringify(u2)).then(() => {
-        AsyncStorage.getItem("users").then((users) => {
-          store.dispatch(setUsers(JSON.parse(users)));
+      }else{
+        book.toRead = false;
+        book.isRead = true;
+        const u2 = users?.filter((u) => u.email !== email);
+        u2.push(u1);
+        AsyncStorage.setItem("users", JSON.stringify(u2)).then(() => {
+          AsyncStorage.getItem("users").then((users) => {
+            store.dispatch(setUsers(JSON.parse(users)));
+          });
         });
-      });
+      }
+
+    
     };
   }
 
@@ -65,9 +69,13 @@ export default function HomePage({ navigation }) {
       if (book.isRead === true) {
         alert("You have already read this book");
         return;
-      } else {
+      } else if(book.isLend === true){
+        alert("You have already lent this book");
+        return;
+      }else {
         book.toRead = true;
         const u2 = users?.filter((u) => u.email !== email);
+        console.log("u2", u2);
         u2.push(u1);
         AsyncStorage.setItem("users", JSON.stringify(u2)).then(() => {
           AsyncStorage.getItem("users").then((users) => {
@@ -80,16 +88,19 @@ export default function HomePage({ navigation }) {
 
   function handleLendBook(book) {
     return () => {
-      book.toLend = true;
-      book.isRead = false;
-      book.toRead = false;
-      const u2 = users?.filter((u) => u.email !== email);
-      u2.push(u1);
-      AsyncStorage.setItem("users", JSON.stringify(u2)).then(() => {
-        AsyncStorage.getItem("users").then((users) => {
-          store.dispatch(setUsers(JSON.parse(users)));
+      if(book.toRead === true){
+        alert("You have added this book to read list")
+      }else{
+        book.isLend = true;
+        const u2 = users?.filter((u) => u.email !== email);
+        u2.push(u1);
+        AsyncStorage.setItem("users", JSON.stringify(u2)).then(() => {
+          AsyncStorage.getItem("users").then((users) => {
+            store.dispatch(setUsers(JSON.parse(users)));
+          });
         });
-      });
+      }
+      
     };
   }
 
@@ -130,7 +141,7 @@ export default function HomePage({ navigation }) {
               </AspectRatio>
             </Box>
             <Stack w="100%" px="3" py="1" bg="trueGray.300">
-              <Stack>
+              
                 <HStack justifyContent="space-between">
                   <VStack>
                     <Heading size="md">{book.title}</Heading>
@@ -149,38 +160,40 @@ export default function HomePage({ navigation }) {
                       {book.pages} - {book.category}
                     </Text>
                   </VStack>
-                  <VStack w="50%" space={2}>
-                    <Text bg="amber.400" onPress={handleBooksToRead(book)}>
-                      Add read list
+                  <VStack minW="40%" mr={20} space={2} mt={1}>
+                    <Text
+                      textAlign="center"
+                      borderRadius={10}
+                      px={2}
+                      bg="amber.300"
+                      onPress={handleBooksToRead(book)}
+                    >
+                      {book.toRead === true
+                        ? "Added to read list"
+                        : "Add to read list"}
                     </Text>
 
-                    <Text bg="amber.400" onPress={handleMarkAsRead(book)}>
-                      Mark as read
+                    <Text
+                      textAlign="center"
+                      borderRadius={10}
+                      pl={2}
+                      bg="amber.300"
+                      onPress={handleMarkAsRead(book)}
+                    >
+                      {book.isRead === true ? "Marked as read" : "Mark as read"}
                     </Text>
 
-                    <Text bg="amber.400" onPress={handleLendBook(book)}>
-                      Lend book
+                    <Text
+                      textAlign="center"
+                      borderRadius={10}
+                      bg="amber.300"
+                      onPress={handleLendBook(book)}
+                    >
+                      {book.isLend === true ? "Lent out" : "Lend"}
                     </Text>
                   </VStack>
                 </HStack>
-              </Stack>
-              <HStack
-                w="100%"
-                alignItems="center"
-                justifyContent="space-between"
-              ></HStack>
-
-              <HStack
-                alignItems="center"
-                space={4}
-                justifyContent="space-between"
-              >
-                <HStack
-                  w="100%"
-                  alignItems="center"
-                  justifyContent="space-between"
-                ></HStack>
-              </HStack>
+              
             </Stack>
           </Box>
         ))}
