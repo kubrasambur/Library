@@ -7,7 +7,9 @@ import { store } from "./src/redux/store";
 import { Provider } from "react-redux";
 import Login from "./src/pages/Login";
 import Signup from "./src/pages/Signup";
-import ForgotPassword from "./src/pages/ForgotPassword";
+import BooksToRead from "./src/pages/BooksToRead";
+import BooksReadInThePast from "./src/pages/BooksReadInThePast";
+import LentBooks from "./src/pages/LentBooks";
 
 const Stack = createNativeStackNavigator();
 
@@ -24,7 +26,9 @@ export default function App() {
             <Stack.Screen name="Signup" component={Signup} />
             <Stack.Screen name="Library" component={HomePage} />
             <Stack.Screen name="Edit" component={EditPage} />
-            <Stack.Screen name="ForgotPassword" component={ForgotPassword} />
+            <Stack.Screen name="BooksToRead" component={BooksToRead} />
+            <Stack.Screen name="BooksReadInPast" component={BooksReadInThePast} />
+            <Stack.Screen name="LentBooks" component={LentBooks} />
           </Stack.Navigator>
         </NavigationContainer>
       </NativeBaseProvider>

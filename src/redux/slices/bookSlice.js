@@ -14,7 +14,7 @@ export const bookSlice = createSlice({
   initialState,
   reducers: {
     addBook: (state, action) => {
-      state.books.push(action.payload);
+      state?.books?.push(action.payload);
     },
     setBooks: (state, action) => {
       state.books = action.payload;
@@ -23,7 +23,7 @@ export const bookSlice = createSlice({
       state.filteredBooks = action.payload;
     },
     addUser: (state, action) => {
-      state.users.push(action.payload);
+      state?.users?.push(action.payload);
     },
     setUsers: (state, action) => {
       state.users = action.payload;

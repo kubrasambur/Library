@@ -112,18 +112,7 @@ const Login = ({ navigation }) => {
               value={password}
               onChangeText={setPassword}
             />
-            <Link
-              onPress={() => navigation.navigate("ForgotPassword")}
-              _text={{
-                fontSize: "xs",
-                fontWeight: "500",
-                color: "indigo.500",
-              }}
-              alignSelf="flex-end"
-              mt="1"
-            >
-              Forget Password?
-            </Link>
+            
           </FormControl>
           <Button mt="2" colorScheme="indigo" onPress={handleLogin}>
             Sign in
