@@ -28,11 +28,7 @@ import { useSelector } from "react-redux";
 import { Entypo, AntDesign } from "@expo/vector-icons";
 
 const EditPage = () => {
-  const books = useSelector((state) => state?.book?.books);
-  const filteredBooks = useSelector((state) => state?.book?.filteredBooks);
-
   const users = useSelector((state) => state?.book?.users);
-
   const email = useSelector((state) => state?.book?.email);
 
   const [open, setOpen] = useState(false);
@@ -53,10 +49,6 @@ const EditPage = () => {
   const [user1, setUser1] = useState({});
   const [render, setRender] = useState([]);
 
-  useEffect(() => {
-   setRender(user1.books);
-  }, [ user1.books]);
-
   function handleAddBook() {
     const newBook = {
       id: uuid.v4(),
@@ -66,17 +58,10 @@ const EditPage = () => {
       publishYear: publishYear,
       pages: pages,
       category: category,
+      isRead: false,
+      toRead: false,
+      isLend: false,
     };
-    if (books) {
-      AsyncStorage.setItem("books", JSON.stringify([...books, newBook]));
-    } else {
-      AsyncStorage.setItem("books", JSON.stringify([newBook]));
-    }
-    AsyncStorage.getItem("books").then((value) => {
-      store.dispatch(setFilteredBooks(JSON.parse(value)));
-      store.dispatch(setBooks(JSON.parse(value)));
-    });
-    store.dispatch(addBook(newBook));
     const alteredUsers = users.map((user) => {
       if (user.id === user1.id) {
         user.books = [...user.books, newBook];
@@ -92,12 +77,6 @@ const EditPage = () => {
   }
 
   function handleDelete(id) {
-    AsyncStorage.getItem("books").then((books) => {
-      const alteredBooks = JSON.parse(books).filter((book) => book.id !== id);
-      AsyncStorage.setItem("books", JSON.stringify(alteredBooks));
-      store.dispatch(setFilteredBooks(alteredBooks));
-    });
-
     const alteredUsers = users.map((user) => {
       if (user.id === user1.id) {
         user.books = user.books.filter((book) => book.id !== id);
@@ -120,21 +99,6 @@ const EditPage = () => {
   }
 
   function editBook() {
-    AsyncStorage.getItem("books").then((books) => {
-      const alteredBooks = JSON.parse(books).map((book) => {
-        if (book.id === bookId) {
-          book.title = editedTitle;
-          book.author = editedAuthor;
-          book.publisher = editedPublisher;
-          book.publishYear = editedPublishYear;
-          book.pages = editedPages;
-          book.category = editedCategory;
-        }
-        return book;
-      });
-      AsyncStorage.setItem("books", JSON.stringify(alteredBooks));
-      store.dispatch(setFilteredBooks(alteredBooks));
-    });
     AsyncStorage.getItem("users").then((users) => {
       const alteredUsers = JSON.parse(users).map((user) => {
         if (user.id === user1.id) {
@@ -155,22 +119,20 @@ const EditPage = () => {
       AsyncStorage.setItem("users", JSON.stringify(alteredUsers));
       store.dispatch(setUsers(alteredUsers));
       setRender(alteredUsers.find((u) => u.email === email)?.books);
+      setRender(user1.books);
     });
 
     setEditIsOpen(false);
   }
 
   useEffect(() => {
-    AsyncStorage.getItem("books").then((value) => {
-      store.dispatch(setFilteredBooks(JSON.parse(value)));
-      store.dispatch(setBooks(JSON.parse(value)));
-    });
-  }, []);
-
-  useEffect(() => {
     const u1 = users?.find((u) => u.email === email);
     setUser1(u1);
   }, [email]);
+  
+  useEffect(() => {
+    setRender(user1.books);
+  }, [user1.books]);
 
   return (
     <VStack pt={6} display="flex" flex={1} alignItems="center">

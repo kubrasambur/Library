@@ -26,19 +26,17 @@ const Signup = ({ navigation }) => {
   const [confirmPassword, setConfirmPassword] = useState("");
 
   useEffect(() => {
-   if(users){
-    AsyncStorage.getItem("users").then((users) => {
-      store.dispatch(setUsers(JSON.parse(users)));
-    }
-    );
-   }else{
-    AsyncStorage.setItem("users", JSON.stringify([])).then(() => {
+    if (users) {
       AsyncStorage.getItem("users").then((users) => {
         store.dispatch(setUsers(JSON.parse(users)));
-      }
-      );
-    });
-   }
+      });
+    } else {
+      AsyncStorage.setItem("users", JSON.stringify([])).then(() => {
+        AsyncStorage.getItem("users").then((users) => {
+          store.dispatch(setUsers(JSON.parse(users)));
+        });
+      });
+    }
   }, []);
 
   function handleSignup() {
@@ -46,35 +44,32 @@ const Signup = ({ navigation }) => {
       alert("Passwords don't match");
       return;
     } else {
-     const user = {
+      const user = {
         id: uuid.v4(),
         email,
         password,
-        books:[]
+        books: [],
+       
       };
       const userExists = users?.find((u) => u.email === email);
       if (userExists) {
         alert("User already exists");
         return;
-      }else{
-        
-        AsyncStorage.setItem("users", JSON.stringify([...users,user])).then(() => {
-          alert("User created successfully");
-          navigation.navigate("Login");
-        });
+      } else {
+        AsyncStorage.setItem("users", JSON.stringify([...users, user])).then(
+          () => {
+            alert("User created successfully");
+            navigation.navigate("Login");
+          }
+        );
 
         AsyncStorage.getItem("users").then((users) => {
           store.dispatch(setUsers(JSON.parse(users)));
-        }
-        );
+        });
         store.dispatch(addUser(user));
-
       }
-
     }
-    }
-
-
+  }
 
   return (
     <VStack flex={1} w="100%" bg="white" h="100%" alignItems="center" mt={-10}>
