@@ -17,27 +17,13 @@ import { addUser, setUsers } from "../../redux/slices/bookSlice";
 import { useSelector } from "react-redux";
 
 const Signup = ({ navigation }) => {
-  const users = useSelector((state) => state?.book?.users);
+  const users = useSelector((state) => state?.library?.users);
 
   const [show, setShow] = useState(false);
   const [showConfirm, setShowConfirm] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
-
-  useEffect(() => {
-    if (users) {
-      AsyncStorage.getItem("users").then((users) => {
-        store.dispatch(setUsers(JSON.parse(users)));
-      });
-    } else {
-      AsyncStorage.setItem("users", JSON.stringify([])).then(() => {
-        AsyncStorage.getItem("users").then((users) => {
-          store.dispatch(setUsers(JSON.parse(users)));
-        });
-      });
-    }
-  }, []);
 
   function handleSignup() {
     if (password !== confirmPassword) {
@@ -69,6 +55,20 @@ const Signup = ({ navigation }) => {
       }
     }
   }
+
+  useEffect(() => {
+    if (users) {
+      AsyncStorage.getItem("users").then((users) => {
+        store.dispatch(setUsers(JSON.parse(users)));
+      });
+    } else {
+      AsyncStorage.setItem("users", JSON.stringify([])).then(() => {
+        AsyncStorage.getItem("users").then((users) => {
+          store.dispatch(setUsers(JSON.parse(users)));
+        });
+      });
+    }
+  }, []);
 
   return (
     <VStack flex={1} w="100%" bg="white" h="100%" alignItems="center" mt={-10}>

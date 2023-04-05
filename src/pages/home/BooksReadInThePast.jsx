@@ -12,11 +12,10 @@ import {
 } from "native-base";
 import SearchBar from "../../components/SearchBar";
 import { useSelector } from "react-redux";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export default function BooksReadInThePast() {
-  const users = useSelector((state) => state?.book?.users);
-  const email = useSelector((state) => state?.book?.email);
+  const users = useSelector((state) => state?.library?.users);
+  const email = useSelector((state) => state?.library?.email);
 
   const [search, setSearch] = useState("");
   const [user, setUser] = useState({});
@@ -41,12 +40,6 @@ export default function BooksReadInThePast() {
       setSearch(text);
     }
   }
-
-  useEffect(() => {
-    AsyncStorage.getItem("user").then((user) => {
-      console.log("user12", JSON.parse(user));
-    });
-  }, [email]);
 
   useEffect(() => {
     setUser(u1);

@@ -23,8 +23,7 @@ import {
 } from "../../redux/slices/bookSlice";
 
 const Login = ({ navigation }) => {
-  const users = useSelector((state) => state?.book?.users);
-  const isLoggedIn = useSelector((state) => state?.book?.loggedIn);
+  const users = useSelector((state) => state?.library?.users);
 
   const [show, setShow] = useState(false);
   const [password, setPassword] = useState("");

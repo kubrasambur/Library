@@ -16,8 +16,8 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useSelector } from "react-redux";
 
 export default function Categories() {
-  const users = useSelector((state) => state?.book?.users);
-  const email = useSelector((state) => state?.book?.email);
+  const users = useSelector((state) => state?.library?.users);
+  const email = useSelector((state) => state?.library?.email);
 
   const [user, setUser] = useState();
 
@@ -45,10 +45,23 @@ export default function Categories() {
             <Collapse>
               <CollapseHeader>
                 <HStack>
-                  <Container pl={20} mr={-20} alignItems="center" flex={1}>
+                  <Container
+                    alignItems="center"
+                    borderTopLeftRadius={10}
+                    bg="gray.400"
+                    flex={1}
+                    pl={12}
+                  >
                     <Text>{category}</Text>
                   </Container>
-                  <Container alignItems="flex-end" pr={2} flex={1}>
+                  <Container
+                    borderTopRightRadius={10}
+                    bg="gray.400"
+                    alignItems="flex-end"
+                    pr={2}
+                    w="20%"
+                    ml={0}
+                  >
                     <ChevronDownIcon size="6" />
                   </Container>
                 </HStack>
@@ -56,7 +69,11 @@ export default function Categories() {
               <CollapseBody>
                 {user?.books.map((book, index) => {
                   if (book.category === category) {
-                    return <Text key={index}>{book.title}</Text>;
+                    return (
+                      <Text textAlign="center" pr={5} key={index}>
+                        {book.title}
+                      </Text>
+                    );
                   }
                 })}
               </CollapseBody>

@@ -12,11 +12,13 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { useSelector } from "react-redux";
 import { store } from "./src/redux/store";
 import { setIsLoggedIn } from "./src/redux/slices/bookSlice";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
+import { Icon } from "native-base";
 
 const Stack = createNativeStackNavigator();
 
 export default function Routing() {
-  const isLoggedIn = useSelector((state) => state?.book?.loggedIn);
+  const isLoggedIn = useSelector((state) => state?.library?.loggedIn);
 
   return (
     <NativeBaseProvider>
@@ -32,6 +34,7 @@ export default function Routing() {
                   bg="danger.700"
                   size="sm"
                   _text={{ fontWeight: "bold" }}
+                  endIcon={<Icon as={MaterialCommunityIcons} name="logout" />}
                 >
                   Log Out
                 </Button>
