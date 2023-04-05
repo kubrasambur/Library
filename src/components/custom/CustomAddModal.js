@@ -5,7 +5,6 @@ import {
   FormControl,
   Input,
   Select,
-  Box,
   CheckIcon,
 } from "native-base";
 
@@ -101,7 +100,6 @@ export default function CustomAddModal({
             style={{ height: 30 }}
             selectedValue={categoryVal}
             minWidth="200"
-            accessibilityLabel="Choose Service"
             _selectedItem={{
               bg: "teal.300",
               endIcon: <CheckIcon size="5" />,
@@ -109,7 +107,7 @@ export default function CustomAddModal({
             onValueChange={(itemValue) => onChangeCategoryText(itemValue)}
           >
             <Select.Item label="Horror" value="Horror" />
-            <Select.Item label="Action " value="Action " />
+            <Select.Item label="Action" value="Action" />
             <Select.Item label="Comic book" value="Comic book" />
             <Select.Item label="Historical" value="Historical" />
             <Select.Item label="Classics" value="Classics" />

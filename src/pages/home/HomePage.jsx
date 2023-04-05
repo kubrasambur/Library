@@ -18,8 +18,8 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { store } from "../../redux/store";
 
 export default function HomePage({ navigation }) {
-  const users = useSelector((state) => state?.book?.users);
-  const email = useSelector((state) => state?.book?.email);
+  const users = useSelector((state) => state?.library?.users);
+  const email = useSelector((state) => state?.library?.email);
 
   const [search, setSearch] = useState("");
   const [user, setUser] = useState({});
@@ -72,7 +72,6 @@ export default function HomePage({ navigation }) {
       } else {
         book.toRead = true;
         const u2 = users?.filter((u) => u.email !== email);
-        console.log("u2", u2);
         u2.push(u1);
         AsyncStorage.setItem("users", JSON.stringify(u2)).then(() => {
           AsyncStorage.getItem("users").then((users) => {
@@ -109,8 +108,6 @@ export default function HomePage({ navigation }) {
     setUser(u1);
     setFilteredBooks(u1?.books);
   }, [users]);
-
-  console.log("user", user);
 
   return (
     <VStack display="flex" flex={1} alignItems="center">

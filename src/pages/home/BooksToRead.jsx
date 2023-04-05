@@ -17,8 +17,8 @@ import { setUsers } from "../../redux/slices/bookSlice";
 import { store } from "../../redux/store";
 
 export default function BooksToRead() {
-  const users = useSelector((state) => state?.book?.users);
-  const email = useSelector((state) => state?.book?.email);
+  const users = useSelector((state) => state?.library?.users);
+  const email = useSelector((state) => state?.library?.email);
 
   const [search, setSearch] = useState("");
   const [user, setUser] = useState({});
@@ -57,12 +57,6 @@ export default function BooksToRead() {
       });
     };
   }
-
-  useEffect(() => {
-    AsyncStorage.getItem("user").then((user) => {
-      console.log("user12", JSON.parse(user));
-    });
-  }, [email]);
 
   useEffect(() => {
     setUser(u1);

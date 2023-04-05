@@ -17,8 +17,8 @@ import { store } from "../../redux/store";
 import { setUsers } from "../../redux/slices/bookSlice";
 
 export default function LentBooks() {
-  const users = useSelector((state) => state?.book?.users);
-  const email = useSelector((state) => state?.book?.email);
+  const users = useSelector((state) => state?.library?.users);
+  const email = useSelector((state) => state?.library?.email);
 
   const [search, setSearch] = useState("");
   const [user, setUser] = useState({});
@@ -45,7 +45,6 @@ export default function LentBooks() {
   }
   function handleTakeBack(book) {
     return () => {
-      console.log("book+++", book);
       book.isLend = false;
       const u2 = users?.filter((u) => u.email !== email);
       u2.push(u1);
@@ -56,12 +55,6 @@ export default function LentBooks() {
       });
     };
   }
-
-  useEffect(() => {
-    AsyncStorage.getItem("user").then((user) => {
-      console.log("user12", JSON.parse(user));
-    });
-  }, [email]);
 
   useEffect(() => {
     setUser(u1);
