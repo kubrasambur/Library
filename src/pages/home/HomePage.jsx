@@ -10,14 +10,13 @@ import {
   AspectRatio,
   Image,
   Stack,
-  Pressable,
 } from "native-base";
-import SearchBar from "../components/SearchBar";
+import SearchBar from "../../components/SearchBar";
 import { useSelector } from "react-redux";
-import { setUsers } from "../redux/slices/bookSlice";
+import { setUsers } from "../../redux/slices/bookSlice";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { store } from "../redux/store";
-import LentBooks from "./LentBooks";
+import { store } from "../../redux/store";
+
 export default function HomePage({ navigation }) {
   const users = useSelector((state) => state?.book?.users);
   const email = useSelector((state) => state?.book?.email);
@@ -45,10 +44,10 @@ export default function HomePage({ navigation }) {
   }
   function handleMarkAsRead(book) {
     return () => {
-      if(book.isLend === true){
+      if (book.isLend === true) {
         alert("You have already lent this book");
         return;
-      }else{
+      } else {
         book.toRead = false;
         book.isRead = true;
         const u2 = users?.filter((u) => u.email !== email);
@@ -59,8 +58,6 @@ export default function HomePage({ navigation }) {
           });
         });
       }
-
-    
     };
   }
 
@@ -69,10 +66,10 @@ export default function HomePage({ navigation }) {
       if (book.isRead === true) {
         alert("You have already read this book");
         return;
-      } else if(book.isLend === true){
+      } else if (book.isLend === true) {
         alert("You have already lent this book");
         return;
-      }else {
+      } else {
         book.toRead = true;
         const u2 = users?.filter((u) => u.email !== email);
         console.log("u2", u2);
@@ -88,9 +85,9 @@ export default function HomePage({ navigation }) {
 
   function handleLendBook(book) {
     return () => {
-      if(book.toRead === true){
-        alert("You have added this book to read list")
-      }else{
+      if (book.toRead === true) {
+        alert("You have added this book to read list");
+      } else {
         book.isLend = true;
         const u2 = users?.filter((u) => u.email !== email);
         u2.push(u1);
@@ -100,7 +97,6 @@ export default function HomePage({ navigation }) {
           });
         });
       }
-      
     };
   }
 
@@ -141,59 +137,57 @@ export default function HomePage({ navigation }) {
               </AspectRatio>
             </Box>
             <Stack w="100%" px="3" py="1" bg="trueGray.300">
-              
-                <HStack justifyContent="space-between">
-                  <VStack>
-                    <Heading size="md">{book.title}</Heading>
-                    <Text
-                      fontSize="xs"
-                      color="gray.600"
-                      fontWeight="500"
-                      ml="-0.5"
-                    >
-                      {book.author}
-                    </Text>
-                    <Text fontWeight="400">
-                      {book.publisher} - {book.publishYear}
-                    </Text>
-                    <Text color="coolGray.600" fontWeight="400">
-                      {book.pages} - {book.category}
-                    </Text>
-                  </VStack>
-                  <VStack minW="40%" mr={20} space={2} mt={1}>
-                    <Text
-                      textAlign="center"
-                      borderRadius={10}
-                      px={2}
-                      bg="amber.300"
-                      onPress={handleBooksToRead(book)}
-                    >
-                      {book.toRead === true
-                        ? "Added to read list"
-                        : "Add to read list"}
-                    </Text>
+              <HStack justifyContent="space-between">
+                <VStack>
+                  <Heading size="md">{book.title}</Heading>
+                  <Text
+                    fontSize="xs"
+                    color="gray.600"
+                    fontWeight="500"
+                    ml="-0.5"
+                  >
+                    {book.author}
+                  </Text>
+                  <Text fontWeight="400">
+                    {book.publisher} - {book.publishYear}
+                  </Text>
+                  <Text color="coolGray.600" fontWeight="400">
+                    {book.pages} - {book.category}
+                  </Text>
+                </VStack>
+                <VStack minW="40%" mr={20} space={2} mt={1}>
+                  <Text
+                    textAlign="center"
+                    borderRadius={10}
+                    px={2}
+                    bg="amber.300"
+                    onPress={handleBooksToRead(book)}
+                  >
+                    {book.toRead === true
+                      ? "Added to read list"
+                      : "Add to read list"}
+                  </Text>
 
-                    <Text
-                      textAlign="center"
-                      borderRadius={10}
-                      pl={2}
-                      bg="amber.300"
-                      onPress={handleMarkAsRead(book)}
-                    >
-                      {book.isRead === true ? "Marked as read" : "Mark as read"}
-                    </Text>
+                  <Text
+                    textAlign="center"
+                    borderRadius={10}
+                    pl={2}
+                    bg="amber.300"
+                    onPress={handleMarkAsRead(book)}
+                  >
+                    {book.isRead === true ? "Marked as read" : "Mark as read"}
+                  </Text>
 
-                    <Text
-                      textAlign="center"
-                      borderRadius={10}
-                      bg="amber.300"
-                      onPress={handleLendBook(book)}
-                    >
-                      {book.isLend === true ? "Lent out" : "Lend"}
-                    </Text>
-                  </VStack>
-                </HStack>
-              
+                  <Text
+                    textAlign="center"
+                    borderRadius={10}
+                    bg="amber.300"
+                    onPress={handleLendBook(book)}
+                  >
+                    {book.isLend === true ? "Lent out" : "Lend"}
+                  </Text>
+                </VStack>
+              </HStack>
             </Stack>
           </Box>
         ))}

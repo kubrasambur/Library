@@ -1,5 +1,13 @@
 import React from "react";
-import { Button, Modal, FormControl, Input } from "native-base";
+import {
+  Button,
+  Modal,
+  FormControl,
+  Input,
+  Select,
+  Box,
+  CheckIcon,
+} from "native-base";
 
 export default function CustomAddModal({
   isOpen,
@@ -64,16 +72,7 @@ export default function CustomAddModal({
               value={publisherVal}
               onChangeText={onChangePublisherText}
             />
-            <FormControl.Label _text={{ fontSize: 11 }}>
-              {category}
-            </FormControl.Label>
-            <Input
-              p={0}
-              pl={2}
-              size="sm"
-              value={categoryVal}
-              onChangeText={onChangeCategoryText}
-            />
+
             <FormControl.Label _text={{ fontSize: 11 }}>
               {publishYear}
             </FormControl.Label>
@@ -94,7 +93,27 @@ export default function CustomAddModal({
               value={pagesVal}
               onChangeText={onChangePagesText}
             />
+            <FormControl.Label _text={{ fontSize: 11 }}>
+              {category}
+            </FormControl.Label>
           </FormControl>
+          <Select
+            style={{ height: 30 }}
+            selectedValue={categoryVal}
+            minWidth="200"
+            accessibilityLabel="Choose Service"
+            _selectedItem={{
+              bg: "teal.300",
+              endIcon: <CheckIcon size="5" />,
+            }}
+            onValueChange={(itemValue) => onChangeCategoryText(itemValue)}
+          >
+            <Select.Item label="Horror" value="Horror" />
+            <Select.Item label="Action " value="Action " />
+            <Select.Item label="Comic book" value="Comic book" />
+            <Select.Item label="Historical" value="Historical" />
+            <Select.Item label="Classics" value="Classics" />
+          </Select>
         </Modal.Body>
         <Modal.Footer>
           <Button.Group space={2}>

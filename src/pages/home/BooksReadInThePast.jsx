@@ -10,7 +10,7 @@ import {
   Image,
   Stack,
 } from "native-base";
-import SearchBar from "../components/SearchBar";
+import SearchBar from "../../components/SearchBar";
 import { useSelector } from "react-redux";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 

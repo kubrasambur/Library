@@ -10,20 +10,20 @@ import {
   Image,
   Stack,
 } from "native-base";
-import SearchBar from "../components/SearchBar";
+import SearchBar from "../../components/SearchBar";
 import { useSelector } from "react-redux";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { setUsers } from "../redux/slices/bookSlice";
-import { store } from "../redux/store";
+import { store } from "../../redux/store";
+import { setUsers } from "../../redux/slices/bookSlice";
 
-export default function BooksToRead() {
+export default function LentBooks() {
   const users = useSelector((state) => state?.book?.users);
   const email = useSelector((state) => state?.book?.email);
 
   const [search, setSearch] = useState("");
   const [user, setUser] = useState({});
   const [filteredBooks, setFilteredBooks] = useState([]);
-  const render = filteredBooks?.filter((book) => book.toRead === true);
+  const render = filteredBooks?.filter((book) => book.isLend === true);
 
   const u1 = users?.find((u) => u.email === email);
 
@@ -43,11 +43,10 @@ export default function BooksToRead() {
       setSearch(text);
     }
   }
-
-  function handleMarkAsRead(book) {
+  function handleTakeBack(book) {
     return () => {
-      book.isRead = true;
-      book.toRead = false;
+      console.log("book+++", book);
+      book.isLend = false;
       const u2 = users?.filter((u) => u.email !== email);
       u2.push(u1);
       AsyncStorage.setItem("users", JSON.stringify(u2)).then(() => {
@@ -68,6 +67,7 @@ export default function BooksToRead() {
     setUser(u1);
     setFilteredBooks(u1?.books);
   }, [users]);
+
   return (
     <VStack display="flex" flex={1} alignItems="center">
       <SearchBar onChangeText={(text) => handleFilter(text)} value={search} />
@@ -93,41 +93,37 @@ export default function BooksToRead() {
               </AspectRatio>
             </Box>
             <Stack w="100%" px="3" py="1" bg="trueGray.300">
-                <HStack justifyContent="space-between">
-                  <VStack>
-                    <Heading size="md">{book.title}</Heading>
-                    <Text
-                      fontSize="xs"
-                      color="gray.600"
-                      fontWeight="500"
-                      ml="-0.5"
-                    >
-                      {book.author}
-                    </Text>
-                    <Text fontWeight="400">
-                      {book.publisher} - {book.publishYear}
-                    </Text>
-                    <Text color="coolGray.600" fontWeight="400">
-                      {book.pages} - {book.category}
-                    </Text>
-                  </VStack>
-                  <VStack minW="40%" mr={20} space={2} mt={1}>
-                    
-
-                    <Text
-                      textAlign="center"
-                      borderRadius={10}
-                      pl={2}
-                      bg="amber.300"
-                      onPress={handleMarkAsRead(book)}
-                    >
-                      {book.isRead === true ? "Marked as read" : "Mark as read"}
-                    </Text>
-
-                    
-                  </VStack>
-                </HStack>
-              </Stack>
+              <HStack justifyContent="space-between">
+                <VStack>
+                  <Heading size="md">{book.title}</Heading>
+                  <Text
+                    fontSize="xs"
+                    color="gray.600"
+                    fontWeight="500"
+                    ml="-0.5"
+                  >
+                    {book.author}
+                  </Text>
+                  <Text fontWeight="400">
+                    {book.publisher} - {book.publishYear}
+                  </Text>
+                  <Text color="coolGray.600" fontWeight="400">
+                    {book.pages} - {book.category}
+                  </Text>
+                </VStack>
+                <VStack minW="40%" mr={20} space={2} mt={1}>
+                  <Text
+                    textAlign="center"
+                    borderRadius={10}
+                    pl={2}
+                    bg="amber.300"
+                    onPress={handleTakeBack(book)}
+                  >
+                    Take Back
+                  </Text>
+                </VStack>
+              </HStack>
+            </Stack>
           </Box>
         ))}
       </ScrollView>

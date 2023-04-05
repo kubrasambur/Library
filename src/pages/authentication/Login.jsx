@@ -15,31 +15,34 @@ import {
 import { MaterialIcons } from "@expo/vector-icons";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useSelector } from "react-redux";
-import { store } from "../redux/store";
-import { setEmaill, setUsers } from "../redux/slices/bookSlice";
+import { store } from "../../redux/store";
+import {
+  setEmaill,
+  setIsLoggedIn,
+  setUsers,
+} from "../../redux/slices/bookSlice";
 
 const Login = ({ navigation }) => {
   const users = useSelector((state) => state?.book?.users);
+  const isLoggedIn = useSelector((state) => state?.book?.loggedIn);
 
   const [show, setShow] = useState(false);
   const [password, setPassword] = useState("");
   const [email, setEmail] = useState("");
 
   useEffect(() => {
-    if(users){
-     AsyncStorage.getItem("users").then((users) => {
-       store.dispatch(setUsers(JSON.parse(users)));
-     }
-     );
-    }else{
-     AsyncStorage.setItem("users", JSON.stringify([])).then(() => {
-       AsyncStorage.getItem("users").then((users) => {
-         store.dispatch(setUsers(JSON.parse(users)));
-       }
-       );
-     });
+    if (users) {
+      AsyncStorage.getItem("users").then((users) => {
+        store.dispatch(setUsers(JSON.parse(users)));
+      });
+    } else {
+      AsyncStorage.setItem("users", JSON.stringify([])).then(() => {
+        AsyncStorage.getItem("users").then((users) => {
+          store.dispatch(setUsers(JSON.parse(users)));
+        });
+      });
     }
-   }, []);
+  }, []);
 
   function handleLogin() {
     if (email === "" || password === "") {
@@ -53,6 +56,7 @@ const Login = ({ navigation }) => {
       );
       if (user) {
         AsyncStorage.setItem("user", JSON.stringify(user)).then(() => {
+          store.dispatch(setIsLoggedIn(true));
           navigation.navigate("Library");
         });
       } else {
@@ -112,7 +116,6 @@ const Login = ({ navigation }) => {
               value={password}
               onChangeText={setPassword}
             />
-            
           </FormControl>
           <Button mt="2" colorScheme="indigo" onPress={handleLogin}>
             Sign in

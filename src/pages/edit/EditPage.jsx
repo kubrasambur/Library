@@ -13,21 +13,21 @@ import {
   IconButton,
   Icon,
 } from "native-base";
-import CustomAddModal from "../components/custom/CustomAddModal";
-import CustomEditModal from "./../components/custom/CustomEditModal";
+import CustomAddModal from "../../components/custom/CustomAddModal";
+import CustomEditModal from "../../components/custom/CustomEditModal";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { store } from "../redux/store";
+import { store } from "../../redux/store";
 import {
   addBook,
   setBooks,
   setFilteredBooks,
   setUsers,
-} from "../redux/slices/bookSlice";
+} from "../../redux/slices/bookSlice";
 import uuid from "react-native-uuid";
 import { useSelector } from "react-redux";
 import { Entypo, AntDesign } from "@expo/vector-icons";
 
-const EditPage = ({navigation}) => {
+const EditPage = ({ navigation }) => {
   const users = useSelector((state) => state?.book?.users);
   const email = useSelector((state) => state?.book?.email);
 
@@ -134,7 +134,7 @@ const EditPage = ({navigation}) => {
     const u1 = users?.find((u) => u.email === email);
     setUser1(u1);
   }, [email]);
-  
+
   useEffect(() => {
     setRender(user1.books);
   }, [user1.books]);
@@ -239,13 +239,7 @@ const EditPage = ({navigation}) => {
       >
         Categories
       </Button>
-      <Button
-        alignSelf="center"
-        w="90%"
-        mb={6}
-        
-        onPress={() => setOpen(true)}
-      >
+      <Button alignSelf="center" w="90%" mb={6} onPress={() => setOpen(true)}>
         Add new book
       </Button>
 
