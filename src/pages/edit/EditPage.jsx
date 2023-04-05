@@ -12,6 +12,8 @@ import {
   Stack,
   IconButton,
   Icon,
+  Popover,
+  Center,
 } from "native-base";
 import CustomAddModal from "../../components/custom/CustomAddModal";
 import CustomEditModal from "../../components/custom/CustomEditModal";
@@ -25,7 +27,7 @@ import {
 } from "../../redux/slices/bookSlice";
 import uuid from "react-native-uuid";
 import { useSelector } from "react-redux";
-import { Entypo, AntDesign } from "@expo/vector-icons";
+import { Entypo, AntDesign, FontAwesome, Feather } from "@expo/vector-icons";
 
 const EditPage = ({ navigation }) => {
   const users = useSelector((state) => state?.book?.users);
@@ -207,11 +209,11 @@ const EditPage = ({ navigation }) => {
                   </HStack>
                 </HStack>
               </Stack>
-              <Stack justifyContent="space-between" mt={-2} mr={-2}>
+              <Stack mt={-2} mr={-1}>
                 <IconButton
                   icon={<Icon as={AntDesign} name="closecircleo" />}
                   _icon={{
-                    color: "blue.500",
+                    color: "black",
                     size: "md",
                   }}
                   onPress={() => handleDelete(book.id)}
@@ -219,12 +221,73 @@ const EditPage = ({ navigation }) => {
                 <IconButton
                   icon={<Icon as={Entypo} name="edit" />}
                   _icon={{
-                    color: "blue.500",
+                    color: "black",
                     size: "md",
                   }}
                   onPress={() => handleEdit(book)}
                   mb={-2}
                 />
+
+                <Box w="100%">
+                  <Popover
+                    trigger={(triggerProps) => {
+                      return (
+                        <IconButton
+                          {...triggerProps}
+                          icon={<Icon as={Entypo} name="share" />}
+                          _icon={{
+                            color: "black",
+                            size: "md",
+                          }}
+                          mb={-10}
+                        />
+                      );
+                    }}
+                  >
+                    <Popover.Content accessibilityLabel="Share Book">
+                      <Popover.Arrow />
+                      <Popover.CloseButton />
+                      <Popover.Header>Share Book</Popover.Header>
+                      <Popover.Body>
+                        <HStack>
+                          <IconButton
+                            icon={<Icon as={FontAwesome} name="whatsapp" />}
+                            _icon={{
+                              color: "black",
+                              size: "md",
+                            }}
+                            onPress={() =>
+                              alert(`${book.title} shared via Whatsapp!`)
+                            }
+                            mb={-2}
+                          />
+                          <IconButton
+                            icon={<Icon as={AntDesign} name="instagram" />}
+                            _icon={{
+                              color: "black",
+                              size: "md",
+                            }}
+                            onPress={() =>
+                              alert(`${book.title} shared via Instagram!`)
+                            }
+                            mb={-2}
+                          />
+                          <IconButton
+                            icon={<Icon as={Feather} name="twitter" />}
+                            _icon={{
+                              color: "black",
+                              size: "md",
+                            }}
+                            onPress={() =>
+                              alert(`${book.title} shared via Twitter!`)
+                            }
+                            mb={-2}
+                          />
+                        </HStack>
+                      </Popover.Body>
+                    </Popover.Content>
+                  </Popover>
+                </Box>
               </Stack>
             </HStack>
           </Box>

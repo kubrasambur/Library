@@ -31,6 +31,7 @@ export default function Routing() {
                   onPress={() => store.dispatch(setIsLoggedIn(false))}
                   bg="danger.700"
                   size="sm"
+                  _text={{ fontWeight: "bold" }}
                 >
                   Log Out
                 </Button>
