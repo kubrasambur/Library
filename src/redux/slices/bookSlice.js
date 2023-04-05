@@ -4,6 +4,7 @@ const initialState = {
   books: [],
   filteredBooks: [],
   users: [],
+  loggedIn: false,
   email: null,
   status: "idle",
   error: null,
@@ -31,9 +32,20 @@ export const bookSlice = createSlice({
     setEmaill: (state, action) => {
       state.email = action.payload;
     },
+    setIsLoggedIn: (state, action) => {
+      state.loggedIn = action.payload;
+    },
   },
 });
 
-export const { addBook, setBooks, setFilteredBooks,addUser,setUsers,setEmaill } = bookSlice.actions;
+export const {
+  addBook,
+  setBooks,
+  setFilteredBooks,
+  addUser,
+  setUsers,
+  setEmaill,
+  setIsLoggedIn,
+} = bookSlice.actions;
 
 export default bookSlice.reducer;

@@ -10,51 +10,51 @@ import {
   Image,
   Stack,
 } from "native-base";
-import SearchBar from "../components/SearchBar";
+import SearchBar from "../../components/SearchBar";
 import { useSelector } from "react-redux";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
-export default function LentBooks  ()  {
-    const users = useSelector((state) => state?.book?.users);
-    const email = useSelector((state) => state?.book?.email);
-  
-    const [search, setSearch] = useState("");
-    const [user, setUser] = useState({});
-    const [filteredBooks, setFilteredBooks] = useState([]);
-    const render = filteredBooks?.filter((book) => book.toLend === true);
-  
-    const u1 = users?.find((u) => u.email === email);
-  
-    function handleFilter(text) {
-      if (text) {
-        const newData = user?.books?.filter(function (item) {
-          const itemData = item.title
-            ? item.title.toUpperCase()
-            : "".toUpperCase();
-          const textData = text.toUpperCase();
-          return itemData.indexOf(textData) > -1;
-        });
-        setFilteredBooks(newData);
-        setSearch(text);
-      } else {
-        setFilteredBooks(user?.books);
-        setSearch(text);
-      }
-    }
-  
-    useEffect(() => {
-      AsyncStorage.getItem("user").then((user) => {
-        console.log("user12", JSON.parse(user));
+export default function BooksReadInThePast() {
+  const users = useSelector((state) => state?.book?.users);
+  const email = useSelector((state) => state?.book?.email);
+
+  const [search, setSearch] = useState("");
+  const [user, setUser] = useState({});
+  const [filteredBooks, setFilteredBooks] = useState([]);
+  const render = filteredBooks?.filter((book) => book.isRead === true);
+
+  const u1 = users?.find((u) => u.email === email);
+
+  function handleFilter(text) {
+    if (text) {
+      const newData = user?.books?.filter(function (item) {
+        const itemData = item.title
+          ? item.title.toUpperCase()
+          : "".toUpperCase();
+        const textData = text.toUpperCase();
+        return itemData.indexOf(textData) > -1;
       });
-    }, [email]);
-  
-    useEffect(() => {
-      setUser(u1);
-      setFilteredBooks(u1?.books);
-    }, [users]);
-    
-    return (
-      <VStack display="flex" flex={1} alignItems="center">
+      setFilteredBooks(newData);
+      setSearch(text);
+    } else {
+      setFilteredBooks(user?.books);
+      setSearch(text);
+    }
+  }
+
+  useEffect(() => {
+    AsyncStorage.getItem("user").then((user) => {
+      console.log("user12", JSON.parse(user));
+    });
+  }, [email]);
+
+  useEffect(() => {
+    setUser(u1);
+    setFilteredBooks(u1?.books);
+  }, [users]);
+
+  return (
+    <VStack display="flex" flex={1} alignItems="center">
       <SearchBar onChangeText={(text) => handleFilter(text)} value={search} />
       <ScrollView w="90%" my={3}>
         {render?.map((book) => (
@@ -84,11 +84,11 @@ export default function LentBooks  ()  {
                   {book.author}
                 </Text>
               </Stack>
-  
+
               <Text fontWeight="400">
                 {book.publisher} - {book.publishYear}
               </Text>
-  
+
               <HStack
                 alignItems="center"
                 space={4}
@@ -115,5 +115,5 @@ export default function LentBooks  ()  {
         ))}
       </ScrollView>
     </VStack>
-    )
+  );
 }

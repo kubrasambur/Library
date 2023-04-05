@@ -12,8 +12,8 @@ import {
 import { MaterialIcons } from "@expo/vector-icons";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import uuid from "react-native-uuid";
-import { store } from "../redux/store";
-import { addUser, setUsers } from "../redux/slices/bookSlice";
+import { store } from "../../redux/store";
+import { addUser, setUsers } from "../../redux/slices/bookSlice";
 import { useSelector } from "react-redux";
 
 const Signup = ({ navigation }) => {
@@ -49,7 +49,6 @@ const Signup = ({ navigation }) => {
         email,
         password,
         books: [],
-       
       };
       const userExists = users?.find((u) => u.email === email);
       if (userExists) {

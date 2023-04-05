@@ -10,18 +10,20 @@ import {
   Image,
   Stack,
 } from "native-base";
-import SearchBar from "../components/SearchBar";
+import SearchBar from "../../components/SearchBar";
 import { useSelector } from "react-redux";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { store } from "../../redux/store";
+import { setUsers } from "../../redux/slices/bookSlice";
 
-export default function BooksReadInThePast() {
+export default function LentBooks() {
   const users = useSelector((state) => state?.book?.users);
   const email = useSelector((state) => state?.book?.email);
 
   const [search, setSearch] = useState("");
   const [user, setUser] = useState({});
   const [filteredBooks, setFilteredBooks] = useState([]);
-  const render = filteredBooks?.filter((book) => book.isRead === true);
+  const render = filteredBooks?.filter((book) => book.isLend === true);
 
   const u1 = users?.find((u) => u.email === email);
 
@@ -40,6 +42,19 @@ export default function BooksReadInThePast() {
       setFilteredBooks(user?.books);
       setSearch(text);
     }
+  }
+  function handleTakeBack(book) {
+    return () => {
+      console.log("book+++", book);
+      book.isLend = false;
+      const u2 = users?.filter((u) => u.email !== email);
+      u2.push(u1);
+      AsyncStorage.setItem("users", JSON.stringify(u2)).then(() => {
+        AsyncStorage.getItem("users").then((users) => {
+          store.dispatch(setUsers(JSON.parse(users)));
+        });
+      });
+    };
   }
 
   useEffect(() => {
@@ -78,37 +93,35 @@ export default function BooksReadInThePast() {
               </AspectRatio>
             </Box>
             <Stack w="100%" px="3" py="1" bg="trueGray.300">
-              <Stack>
-                <Heading size="md">{book.title}</Heading>
-                <Text fontSize="xs" color="gray.600" fontWeight="500" ml="-0.5">
-                  {book.author}
-                </Text>
-              </Stack>
-
-              <Text fontWeight="400">
-                {book.publisher} - {book.publishYear}
-              </Text>
-
-              <HStack
-                alignItems="center"
-                space={4}
-                justifyContent="space-between"
-              >
-                <HStack
-                  w="100%"
-                  alignItems="center"
-                  justifyContent="space-between"
-                >
+              <HStack justifyContent="space-between">
+                <VStack>
+                  <Heading size="md">{book.title}</Heading>
                   <Text
-                    color="coolGray.600"
-                    _dark={{
-                      color: "warmGray.200",
-                    }}
-                    fontWeight="400"
+                    fontSize="xs"
+                    color="gray.600"
+                    fontWeight="500"
+                    ml="-0.5"
                   >
+                    {book.author}
+                  </Text>
+                  <Text fontWeight="400">
+                    {book.publisher} - {book.publishYear}
+                  </Text>
+                  <Text color="coolGray.600" fontWeight="400">
                     {book.pages} - {book.category}
                   </Text>
-                </HStack>
+                </VStack>
+                <VStack minW="40%" mr={20} space={2} mt={1}>
+                  <Text
+                    textAlign="center"
+                    borderRadius={10}
+                    pl={2}
+                    bg="amber.300"
+                    onPress={handleTakeBack(book)}
+                  >
+                    Take Back
+                  </Text>
+                </VStack>
               </HStack>
             </Stack>
           </Box>
