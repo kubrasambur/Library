@@ -3,7 +3,7 @@ import bookSlice from "./slices/bookSlice";
 
 export const store = configureStore({
   reducer: {
-    book: bookSlice,
+    library: bookSlice,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({
