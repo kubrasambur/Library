@@ -1,7 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
-  filteredBooks: [],
   users: [],
   loggedIn: false,
   email: null,
@@ -13,9 +12,6 @@ export const bookSlice = createSlice({
   name: "library",
   initialState,
   reducers: {
-    setFilteredBooks: (state, action) => {
-      state.filteredBooks = action.payload;
-    },
     addUser: (state, action) => {
       state?.users?.push(action.payload);
     },
@@ -31,7 +27,7 @@ export const bookSlice = createSlice({
   },
 });
 
-export const { setFilteredBooks, addUser, setUsers, setEmaill, setIsLoggedIn } =
+export const { addUser, setUsers, setEmaill, setIsLoggedIn } =
   bookSlice.actions;
 
 export default bookSlice.reducer;
